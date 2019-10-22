@@ -25,7 +25,8 @@ class Rotate(object):
         return x
 
 def omniglot_character_folders():
-    data_folder = '../datas/omniglot_resized/'
+    data_folder = '../datas/omniglot_resized'
+    #data_folder = 'D:\\pythonwork\\LearningToCompare_FSL-master\\datas\\omniglot_resized\\'
 
     character_folders = [os.path.join(data_folder, family, character) \
                 for family in os.listdir(data_folder) \
@@ -68,11 +69,16 @@ class OmniglotTask(object):
             self.train_roots += samples[c][:train_num]
             self.test_roots += samples[c][train_num:train_num+test_num]
 
+
+        for i in self.train_roots:
+            print(i)
+
         self.train_labels = [labels[self.get_class(x)] for x in self.train_roots]
         self.test_labels = [labels[self.get_class(x)] for x in self.test_roots]
 
     def get_class(self, sample):
-        return os.path.join(*sample.split('/')[:-1])
+        #print(os.path.join(*sample.split('\\')[:-1]),'go')
+        return os.path.join(*sample.split('\\')[:-1])
 
 
 class FewShotDataset(Dataset):
@@ -96,6 +102,9 @@ class Omniglot(FewShotDataset):
 
     def __init__(self, *args, **kwargs):
         super(Omniglot, self).__init__(*args, **kwargs)
+        self.transform = transforms.Compose([
+                transforms.ToTensor(),
+                transforms.Normalize([0.5],[0.5])])
 
     def __getitem__(self, idx):
         image_root = self.image_roots[idx]
