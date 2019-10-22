@@ -185,6 +185,9 @@ def main():
 
                 _,predict_labels = torch.max(relations.data,1)
 
+                predict_labels = predict_labels.to('cuda:0', dtype=torch.int32)
+                test_labels = test_labels.to('cuda:0')
+
                 rewards = [1 if predict_labels[j]==test_labels[j] else 0 for j in range(CLASS_NUM)]
 
                 total_rewards += np.sum(rewards)
